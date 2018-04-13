@@ -1,0 +1,4 @@
+boto3
+pytest-cov
+pytest-pep8
+pytest-logging
