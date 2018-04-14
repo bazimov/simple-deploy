@@ -1,3 +1,4 @@
+"""Unit tests for the script."""
 import boto3
 from botocore.stub import Stubber
 
@@ -6,32 +7,24 @@ from .deploy import (get_elb_name, get_old_ami_info, launch_new_instances, regis
 
 def test_get_ami_info():
     """"""
-    client = boto3.client('ec2')
+    client = boto3.client('ec2', region_name='us-east-1')
     stubber = Stubber(client)
     res = {
         'Reservations': [{
             'Groups': [],
             'Instances': [{
-                'ImageId':
-                'ami-88888',
-                'InstanceId':
-                'i-01fb1e7',
-                'InstanceType':
-                'm5.xlarge',
-                'KeyName':
-                'test-key',
+                'ImageId': 'ami-88888',
+                'InstanceId': 'i-01fb1e7',
+                'InstanceType': 'm5.xlarge',
+                'KeyName': 'test-key',
                 'State': {
                     'Code': 16,
                     'Name': 'running'
                 },
-                'SubnetId':
-                'subnet-aaaaaa',
-                'VpcId':
-                'vpc-bbbbb',
-                'RootDeviceName':
-                '/dev/xvda',
-                'RootDeviceType':
-                'ebs',
+                'SubnetId': 'subnet-aaaaaa',
+                'VpcId': 'vpc-bbbbb',
+                'RootDeviceName': '/dev/xvda',
+                'RootDeviceType': 'ebs',
                 'SecurityGroups': [{
                     'GroupName': 'launch-wizard-34',
                     'GroupId': 'sg-54444'
@@ -40,8 +33,7 @@ def test_get_ami_info():
                     'Key': 'Name',
                     'Value': 'messages_logs_parsing_5'
                 }],
-                'VirtualizationType':
-                'hvm'
+                'VirtualizationType': 'hvm'
             }],
             'OwnerId':
             '66',
@@ -49,7 +41,15 @@ def test_get_ami_info():
             'r-00665c53a'
         }]
     }
-    expected_params = {'Filters': [{'Name': 'image-id', 'Values': ['ami-88888']}]}
+    expected_params = {
+        'Filters': [{
+            'Name': 'image-id',
+            'Values': ['ami-88888']
+        }, {
+            'Name': 'instance-state-name',
+            'Values': ['running']
+        }]
+    }
     stubber.add_response('describe_instances', res, expected_params)
     with stubber:
         result = get_old_ami_info('ami-88888', client)
@@ -61,7 +61,7 @@ def test_get_ami_info():
 
 def test_get_elb_name():
     instance_id = 'i-123455id'
-    client = boto3.client('elb')
+    client = boto3.client('elb', region_name='us-east-1')
     stubber = Stubber(client)
     res = {'LoadBalancerDescriptions': [{'Instances': [{'InstanceId': instance_id}], 'LoadBalancerName': 'test-elb'}]}
     expected_params = {}
@@ -71,5 +71,3 @@ def test_get_elb_name():
 
     assert isinstance(result, str)
     assert result == 'test-elb'
-
-
