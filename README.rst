@@ -15,6 +15,7 @@ Installing
 
 Install directly from the code:
 
+::
     git clone https://github.com/bazimov/simple_deploy
     cd simple_deploy
     pip install -r requirements.txt
@@ -22,20 +23,21 @@ Install directly from the code:
 Running
 -------
 
-``
-./deploy.py --help
+::
+    ./deploy.py --help
 
-export OLD_AMI_ID=ami-12345
-export NEW_AMI_ID=ami-56789
-./deploy.py ${OLD_AMI_ID} ${NEW_AMI_ID}
-``
+    export OLD_AMI_ID=ami-12345
+    export NEW_AMI_ID=ami-56789
+    ./deploy.py ${OLD_AMI_ID} ${NEW_AMI_ID}
+
 
 Tests
 ------
 Install tox and run.
 
-``
-pip install tox
+``pip install tox``
 
-cd simple_deploy; tox
-``
+::
+    git clone https://github.com/bazimov/simple_deploy
+    cd simple_deploy;
+    tox
