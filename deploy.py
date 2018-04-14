@@ -38,7 +38,7 @@ def get_old_ami_info(image=None, client=None):
         'Values': [image]
     }, {
         'Name': 'instance-state-name',
-        'Values': 'running'
+        'Values': ['running']
     }])
 
     LOG.debug('Raw response for describe_instances: %s', response)
@@ -201,8 +201,8 @@ def main():
     """Simple deployment script."""
     old_image, new_image = argument_parser()
 
-    ec2_client = boto3.client('ec2')
-    elb_client = boto3.client('elb')
+    ec2_client = boto3.client('ec2', region_name='us-east-1')
+    elb_client = boto3.client('elb', region_name='us-east-1')
 
     currently_running = get_old_ami_info(image=old_image, client=ec2_client)
     old_instance_ids = [vm['InstanceId'] for vm in currently_running]
