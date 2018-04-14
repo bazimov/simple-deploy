@@ -171,16 +171,17 @@ def argument_parser():
     """Argument parser.
 
     Returns:
-        old_image (str): Old AMI ID.
-        new_image (str): New AMI ID.
+        old_ami_id (str): Old AMI ID.
+        new_ami_id (str): New AMI ID.
     """
     parser = argparse.ArgumentParser(description='Deployment script.')
     parser.add_argument(
-        'images', metavar='ami-id', type=str, nargs=2, help='Provide 2 AMI IDs, first old ami-id then new ami-id.')
+        'old_ami_id', metavar='old-ami-id', type=str, nargs=1, help='Provide OLD AMI-ID that is deployed.')
+    parser.add_argument(
+        'new_ami_id', metavar='new-ami-id', type=str, nargs=1, help='Provide NEW AMI-ID to deploy.')
     args = parser.parse_args()
-    old_image, new_image = args.images
 
-    if old_image == new_image:
+    if args.old_ami_id == args.new_ami_id:
         raise Exception('Both AMI ids cannot be same.')
 
-    return old_image, new_image
+    return args.old_ami_id, args.new_ami_id
