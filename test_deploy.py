@@ -74,6 +74,31 @@ def test_get_elb_name():
 
 
 def test_register_to_elb():
-    instances = ['i-123455id']
+    instance = 'i-123455id'
     client = boto3.client('elb', region_name='us-east-1')
     stubber = Stubber(client)
+    res = {
+        'Instances': [
+            {
+                'InstanceId': instance
+            },
+        ]
+    }
+    health_res = {
+        'InstanceStates': [
+            {
+                'InstanceId': instance,
+                'State': 'InService',
+                'ReasonCode': 'string',
+                'Description': 'string'
+            },
+        ]
+    }
+    expected_params = {'Instances': [{'InstanceId': instance}], 'LoadBalancerName': 'test-elb'}
+    stubber.add_response('register_instances_with_load_balancer', res, expected_params)
+    stubber.add_response('describe_instance_health', health_res, expected_params)
+    with stubber:
+        result = register_to_elb('test-elb', [instance], client)
+
+    assert isinstance(result, bool)
+    assert result is True
