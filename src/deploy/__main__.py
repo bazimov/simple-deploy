@@ -2,7 +2,7 @@
 """Simple AWS Deploy script.
 
    Provide currently running old AMI id and new AMI id to deploy.
-   Example: ./deploy.py ami-12334 ami-23445
+   Example: deploy ami-12334 ami-23445
 
    TODO:
        1. Add feat AutoScaling Groups.
