@@ -102,3 +102,92 @@ def test_register_to_elb():
 
     assert isinstance(result, bool)
     assert result is True
+
+
+def test_launch_new_instances():
+    image = 'ami-12345'
+    data = [{
+        'InstanceType': 't2.micro',
+        'KeyName': 'string',
+        'SecurityGroupIds': ['sg-12344'],
+        'SubnetId': 'string',
+        'InstanceId': 'string',
+    }]
+    client = boto3.client('ec2', region_name='us-east-1')
+    stubber = Stubber(client)
+    describe_res = {
+        'Reservations': [{
+            'Groups': [],
+            'Instances': [{
+                'ImageId': image,
+                'InstanceId': 'string',
+                'InstanceType': 't2.micro',
+                'KeyName': 'string',
+                'State': {
+                    'Code': 16,
+                    'Name': 'running'
+                },
+                'StateTransitionReason': '',
+                'SubnetId': 'string',
+                'Tags': [{
+                    'Key': 'Name',
+                    'Value': 'EngFlightTest'
+                }],
+                'VirtualizationType': 'hvm',
+                'VpcId': 'vpc-33333'
+            }],
+            'OwnerId':
+            '66',
+            'RequesterId':
+            '226008221399',
+            'ReservationId':
+            'r-01b54e07f28fb38d9'
+        }]
+    }
+    res = {
+        'Groups': [
+            {
+                'GroupName': 'string',
+                'GroupId': 'string'
+            },
+        ],
+        'Instances': [
+            {
+                'AmiLaunchIndex': 123,
+                'ImageId': image,
+                'InstanceId': 'string',
+                'InstanceType': 't2.micro',
+                'KernelId': 'string',
+                'KeyName': 'string',
+                'State': {
+                    'Code': 16,
+                    'Name': 'running'
+                },
+                'StateTransitionReason': 'string',
+                'SubnetId': 'string',
+                'VirtualizationType': 'hvm'
+            },
+        ],
+        'OwnerId':
+        'string',
+        'RequesterId':
+        'string',
+        'ReservationId':
+        'string'
+    }
+    expected_params = {
+        'ImageId': image,
+        'InstanceType': 't2.micro',
+        'KeyName': 'string',
+        'MaxCount': 1,
+        'MinCount': 1,
+        'SecurityGroupIds': ['sg-12344'],
+        'SubnetId': 'string'
+    }
+    stubber.add_response('run_instances', res, expected_params)
+    stubber.add_response('describe_instances', describe_res, {'InstanceIds': ['string']})
+    with stubber:
+        result = launch_new_instances(image, data, client)
+
+    assert isinstance(result, list)
+    assert result == ['string']
