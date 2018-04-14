@@ -1,5 +1,6 @@
 |Build Status|
 
+
 Simple Deploy script.
 =====================
 
@@ -41,3 +42,4 @@ Install tox and run.
     git clone https://github.com/bazimov/simple_deploy
     cd simple_deploy;
     tox
+
