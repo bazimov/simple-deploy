@@ -2,7 +2,7 @@
 import boto3
 from botocore.stub import Stubber
 
-from .deploy import (get_elb_name, get_old_ami_info, launch_new_instances, register_to_elb, terminate_old_instances)
+from deploy.utils import (get_elb_name, get_old_ami_info, launch_new_instances, register_to_elb)
 
 
 def test_get_ami_info():
