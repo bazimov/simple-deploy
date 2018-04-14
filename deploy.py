@@ -25,7 +25,7 @@ def get_old_ami_info(image=None, client=None):
 
     Args:
         image (str): AMI ID.
-        client (class): Boto3 client.
+        client (botocore.client.EC2): Boto3 client.
 
     Returns:
         trimmed_data (list): Trimmed version of the API data.
@@ -64,7 +64,7 @@ def get_elb_name(instances=None, client=None):
 
     Args:
         instances (list): List of instances.
-        client (class): Boto3 client.
+        client (botocore.client.ELB): Boto3 client.
 
     Returns:
         elb_name (str): Name of the ELB.
@@ -93,7 +93,7 @@ def register_to_elb(lb_name=None, instances=None, client=None):
     Args:
         lb_name (str): ELB Name.
         instances (list): Instance IDs list.
-        client (class): Boto3 client.
+        client (botocore.client.ELB): Boto3 client.
 
     Returns:
         health_check (bool): True or False.
@@ -126,12 +126,13 @@ def launch_new_instances(image=None, data=None, client=None):
     Args:
         image (str): New AMI id to deploy.
         data (list): Trimmed data from old AMI.
-        client (class): Boto3 client.
+        client (botocore.client.EC2): Boto3 client.
 
     Returns:
         instances (list): Instance Ids of newly launched AMIs.
     """
     instances = list()
+
     for resource in data:
         response = client.run_instances(
             ImageId=image,
@@ -144,7 +145,7 @@ def launch_new_instances(image=None, data=None, client=None):
         instances.append(response['Instances'][0]['InstanceId'])
 
     waiter = client.get_waiter('instance_running')
-    print('### Wait for instances running state. ###\n')
+    print('### Wait for newly launched instances state change to running. ###\n')
     waiter.wait(InstanceIds=instances)
 
     LOG.info('Newly launched instances are: %s', instances)
@@ -159,17 +160,19 @@ def terminate_old_instances(lb_name=None, instances=None, client_ec2=None, clien
     Args:
         lb_name (str): ELB Name.
         instances (list): List of instance ids.
-        client_ec2 (class): Boto3 client for ec2.
-        client_elb (class): Boto3 client for elb.
+        client_ec2 (botocore.client.EC2): Boto3 client for ec2.
+        client_elb (botocore.client.ELB): Boto3 client for elb.
 
     Returns:
         None
     """
     print('### Deregister from ELB {0} and terminate instances {1} ###'.format(lb_name, instances))
     instances_list = [{'InstanceId': vm} for vm in instances]
+
     response = client_elb.deregister_instances_from_load_balancer(
         LoadBalancerName=lb_name,
         Instances=instances_list, )
+
     LOG.info('Deregistered instances %s from ELB %s.', instances, lb_name)
     LOG.debug(response)
 

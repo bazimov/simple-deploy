@@ -1,15 +1,21 @@
 |Build Status|
 
 
+.. |Build Status| image:: https://travis-ci.org/bazimov/simple_deploy.svg?branch=master
+   :target: https://travis-ci.org/bazimov/simple_deploy
+
+
 Simple Deploy script.
 =====================
 
 Takes 2 AMI IDs one old, and one new. Gather necessary information from old AMI ID then launch the new ami with that info.
 If instances launched with new AMI ID are healthy, then deregisters old instances from ELB and terminates them.
 
-# Requirements
+Requirements
+------------
 - Python3
 - boto3 AWS python sdk
+- Proper EC2 & ELB IAM Policy permissions
 
 Installing
 ----------
@@ -17,6 +23,7 @@ Installing
 Install directly from the code:
 
 ::
+
     git clone https://github.com/bazimov/simple_deploy
     cd simple_deploy
     pip install -r requirements.txt
@@ -25,6 +32,7 @@ Running
 -------
 
 ::
+
     ./deploy.py --help
 
     export OLD_AMI_ID=ami-12345
@@ -39,6 +47,7 @@ Install tox and run.
 ``pip install tox``
 
 ::
+
     git clone https://github.com/bazimov/simple_deploy
     cd simple_deploy;
     tox

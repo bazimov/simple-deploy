@@ -71,3 +71,9 @@ def test_get_elb_name():
 
     assert isinstance(result, str)
     assert result == 'test-elb'
+
+
+def test_register_to_elb():
+    instances = ['i-123455id']
+    client = boto3.client('elb', region_name='us-east-1')
+    stubber = Stubber(client)
