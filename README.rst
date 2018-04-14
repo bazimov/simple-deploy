@@ -26,18 +26,19 @@ Install directly from the code:
 
     git clone https://github.com/bazimov/simple_deploy
     cd simple_deploy
-    pip install -r requirements.txt
+    pip install -U .
 
 Running
 -------
 
 ::
 
-    ./deploy.py --help
+    deploy --help
 
     export OLD_AMI_ID=ami-12345
     export NEW_AMI_ID=ami-56789
-    ./deploy.py ${OLD_AMI_ID} ${NEW_AMI_ID}
+
+    deploy ${OLD_AMI_ID} ${NEW_AMI_ID}
 
 
 Tests
