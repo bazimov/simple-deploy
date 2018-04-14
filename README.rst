@@ -9,6 +9,7 @@ Simple Deploy script.
 =====================
 
 Takes 2 AMI-IDs one old, and one new. Gathers necessary information from old AMI-ID then launch the new ami with that info.
+Attaches newly launched instances to the ELB that is serving old ami-id instances.
 If instances launched with new AMI-ID are healthy, then deregisters old instances from ELB and terminates them.
 
 Requirements
