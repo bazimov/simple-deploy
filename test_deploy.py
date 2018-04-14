@@ -1,3 +1,4 @@
+"""Unit tests for the script."""
 import boto3
 from botocore.stub import Stubber
 
